@@ -74,7 +74,7 @@ ChatbotForHealthcare/
 
 1.  **Clone repository (nếu đã push lên Git):**
     ```bash
-    git clone <URL-repository-cua-ban>
+    git clone https://github.com/nickken253/ChatbotHealthcare
     cd ChatbotForHealthcare
     ```
 2.  **Tạo và kích hoạt môi trường ảo (khuyến nghị):**
