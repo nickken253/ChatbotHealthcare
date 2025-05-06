@@ -1,0 +1,496 @@
+/* --- Nhập Font Roboto từ Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    /* --- Sử dụng font Roboto --- */
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px; /* Thêm padding quanh body */
+    /* --- Màu nền nhẹ nhàng hơn --- */
+    background-color: #e8f0f2; /* Màu xanh dương rất nhạt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333; /* Màu chữ mặc định */
+    line-height: 1.5; /* Cải thiện khả năng đọc */
+}
+
+.chat-container {
+    background-color: #ffffff; /* Nền trắng cho container */
+    border-radius: 12px; /* Bo góc lớn hơn */
+    /* --- Bóng đổ tinh tế hơn --- */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 90%;
+    max-width: 550px; /* Tăng chiều rộng tối đa một chút */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 85vh; /* Tăng chiều cao một chút */
+    border: 1px solid #dce7eb; /* Thêm viền nhẹ */
+}
+
+h1 {
+    text-align: center;
+    /* --- Màu tiêu đề --- */
+    color: #1a5f7a; /* Xanh đậm hơn */
+    padding: 18px 15px; /* Tăng padding */
+    margin: 0;
+    /* --- Nền tiêu đề --- */
+    background: linear-gradient(to bottom, #f8fbfc, #eef4f7); /* Gradient nhẹ */
+    border-bottom: 1px solid #dce7eb;
+    font-size: 1.3em; /* Tăng kích thước chữ */
+    font-weight: 500; /* Độ đậm vừa phải */
+}
+
+#chatbox {
+    flex-grow: 1;
+    padding: 20px; /* Tăng padding */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Thêm khoảng cách giữa các tin nhắn */
+    background-color: #f9fbfc; /* Nền chatbox hơi khác body một chút */
+}
+
+/* --- Custom scrollbar (Tùy chọn, làm đẹp thanh cuộn) --- */
+#chatbox::-webkit-scrollbar {
+    width: 6px;
+}
+#chatbox::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+#chatbox::-webkit-scrollbar-thumb {
+    background: #c1cbd0; /* Màu thanh cuộn */
+    border-radius: 3px;
+}
+#chatbox::-webkit-scrollbar-thumb:hover {
+    background: #a8b5bd;
+}
+
+
+.message {
+    padding: 10px 15px; /* Điều chỉnh padding */
+    border-radius: 18px; /* Bo góc tròn hơn */
+    max-width: 85%; /* Tăng độ rộng tối đa */
+    word-wrap: break-word;
+    /* --- CSS để hiển thị đúng các thẻ HTML từ Markdown --- */
+    white-space: normal; /* Ghi đè pre-wrap nếu có, để HTML tự ngắt dòng */
+    line-height: 1.4; /* Điều chỉnh khoảng cách dòng trong tin nhắn */
+}
+
+/* --- Định dạng các thẻ HTML bên trong tin nhắn bot --- */
+.bot-message p:last-child,
+.bot-message ul:last-child,
+.bot-message ol:last-child {
+     margin-bottom: 0; /* Bỏ margin dưới của phần tử cuối cùng */
+}
+.bot-message hr {
+    border: none;
+    border-top: 1px dashed #ccc; /* Đường kẻ ngang dạng dashed */
+    margin: 8px 0;
+}
+.bot-message strong, .bot-message b {
+    font-weight: 700; /* Đảm bảo chữ đậm rõ ràng */
+    color: #1a5f7a; /* Có thể cho chữ đậm màu khác */
+}
+.bot-message ul {
+    padding-left: 25px;
+    margin-top: 5px;
+}
+.bot-message li {
+    margin-bottom: 4px;
+}
+
+.user-message {
+    /* --- Màu mới cho tin nhắn người dùng --- */
+    background-color: #1a7fa8; /* Xanh dương thanh lịch hơn */
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 6px; /* Bo góc dưới phải ít hơn */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.bot-message {
+    /* --- Màu mới cho tin nhắn bot --- */
+    background-color: #eef4f7; /* Xanh nhạt tương ứng */
+    color: #334e5e; /* Màu chữ tối hơn để dễ đọc */
+    align-self: flex-start;
+    border-bottom-left-radius: 6px; /* Bo góc dưới trái ít hơn */
+    border: 1px solid #dce7eb; /* Thêm viền nhẹ */
+}
+
+
+.input-area {
+    display: flex;
+    padding: 15px; /* Tăng padding */
+    background-color: #ffffff; /* Nền trắng */
+    border-top: 1px solid #dce7eb;
+}
+
+#userInput {
+    flex-grow: 1;
+    padding: 12px 18px; /* Tăng padding */
+    border: 1px solid #ccc;
+    border-radius: 25px; /* Bo tròn nhiều hơn */
+    margin-right: 10px;
+    font-size: 1em;
+    color: #333;
+    transition: border-color 0.3s ease; /* Hiệu ứng khi focus */
+}
+#userInput:focus {
+    outline: none;
+    border-color: #1a7fa8; /* Đổi màu viền khi focus */
+    box-shadow: 0 0 0 2px rgba(26, 127, 168, 0.1); /* Thêm hiệu ứng bóng mờ khi focus */
+}
+
+#sendButton {
+    padding: 12px 20px; /* Tăng padding */
+    /* --- Màu nút mới --- */
+    background-color: #1a7fa8; /* Đồng bộ với màu user message */
+    color: white;
+    border: none;
+    border-radius: 25px; /* Đồng bộ bo tròn */
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease; /* Hiệu ứng khi hover */
+}
+
+#sendButton:hover {
+    /* --- Màu nút khi hover --- */
+    background-color: #135e7d; /* Sậm hơn một chút */
+}
+
+/* Thêm các quy tắc này vào cuối file style.css của bạn */
+/* (Giữ nguyên các CSS đã có từ trước) */
+
+/* --- Định dạng vùng Input Area để chứa nút mới --- */
+.input-area {
+    display: flex;
+    align-items: center; /* Căn giữa các item theo chiều dọc */
+    padding: 10px 15px; /* Giảm padding dọc một chút */
+    background-color: #ffffff;
+    border-top: 1px solid #dce7eb;
+}
+
+#userInput {
+    /* Giữ nguyên các style khác */
+    margin-left: 10px; /* Thêm khoảng cách bên trái input */
+}
+
+/* --- Nút Tin nhắn mẫu --- */
+.sample-button {
+    padding: 8px 12px; /* Kích thước nhỏ hơn nút gửi */
+    background-color: #f0f2f5; /* Màu nền nhạt */
+    color: #556270; /* Màu icon/chữ */
+    border: 1px solid #ccc;
+    border-radius: 50%; /* Bo tròn thành hình tròn */
+    cursor: pointer;
+    font-size: 1.2em; /* Kích thước icon/chữ */
+    line-height: 1; /* Đảm bảo icon căn giữa */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    flex-shrink: 0; /* Ngăn nút bị co lại */
+}
+
+.sample-button:hover {
+    background-color: #e4e6eb;
+    color: #1a7fa8;
+}
+
+/* --- Popup Tin nhắn mẫu --- */
+/* .sample-popup {
+    display: none; 
+    position: absolute;
+    bottom: 65px; 
+    right: 15px;  
+    max-width: calc(100% - 30px); 
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 1000; 
+    padding: 15px;
+    max-height: 250px; 
+    overflow-y: auto;  
+    box-sizing: border-box; 
+} */
+
+/* .sample-popup h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #1a5f7a;
+    font-size: 0.9em;
+    font-weight: 500;
+} */
+
+#sampleList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#sampleList li {
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    background-color: #f9fbfc;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #334e5e;
+    transition: background-color 0.2s ease;
+    border: 1px solid #eef4f7;
+}
+
+#sampleList li:hover {
+    background-color: #e4f0f3;
+}
+
+.close-popup-btn {
+    display: block; /* Nút chiếm cả hàng */
+    width: 100%;
+    margin-top: 10px;
+    padding: 6px 10px;
+    background-color: #f0f2f5;
+    color: #556270;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+.close-popup-btn:hover {
+     background-color: #e4e6eb;
+}
+
+/* --- Hiệu ứng Typing Indicator --- */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    padding: 5px 0; /* Giảm padding */
+}
+
+.typing-indicator span {
+    height: 8px;
+    width: 8px;
+    background-color: #a8b5bd; /* Màu chấm */
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 2px;
+    animation: typing 1.2s infinite ease-in-out;
+}
+
+/* Độ trễ animation cho các chấm */
+.typing-indicator span:nth-child(1) { animation-delay: -0.30s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.15s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+
+/* --- STYLE MỚI CHO KHU VỰC GỢI Ý CỐ ĐỊNH (#suggestionsArea) --- */
+.suggestions-area {
+    padding: 12px 15px; /* Padding */
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+    border-top: 1px solid #e0e0e0; /* Đường kẻ phân cách với chatbox */
+    /* display: none; */ /* Được kiểm soát bởi JS */
+    box-sizing: border-box;
+}
+
+.suggestions-area .suggestions-title { /* Style cho tiêu đề nếu có */
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.suggestions-area .suggestion-buttons { /* Container chứa các nút */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Căn giữa các nút */
+    gap: 8px 10px;
+}
+
+/* Style cho nút gợi ý (giữ nguyên hoặc chỉnh sửa nếu muốn) */
+.sample-message-button {
+    background-color: #ffffff;
+    border: 1px solid #a8c5d1;
+    color: #1a7fa8;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+}
+
+.sample-message-button:hover {
+    background-color: #eef6f9;
+    border-color: #1a7fa8;
+}
+.message p:first-child {
+    margin-top: 0;
+}
+
+.message p:last-child {
+    margin-bottom: 0;
+}
+
+/* Bạn cũng có thể thêm các quy tắc tương tự cho thẻ H1, H2,... nếu marked.js tạo ra chúng */
+.message h1:first-child,
+.message h2:first-child,
+.message h3:first-child,
+.message h4:first-child,
+.message h5:first-child,
+.message h6:first-child {
+     margin-top: 0;
+}
+
+/* =================================== */
+/* ===== Responsive Adjustments ====== */
+/* =================================== */
+
+/* --- Tablet & Màn hình nhỏ hơn (Ví dụ: < 992px) --- */
+@media (max-width: 991.98px) {
+    /* Có thể giảm chiều rộng tối đa của chat container nếu muốn */
+    /* .chat-container {
+        max-width: 500px;
+    } */
+
+    /* Giảm nhẹ font chữ chung nếu cần */
+    /* body {
+        font-size: 15px; // Hoặc 0.95rem
+    } */
+}
+
+/* --- Mobile & Tablet nhỏ (Ví dụ: < 768px) --- */
+@media (max-width: 767.98px) {
+    body {
+        padding: 10px; /* Giảm padding body */
+        /* Đảm bảo container căn trên cùng thay vì giữa màn hình */
+        align-items: flex-start;
+        min-height: calc(100vh - 20px); /* Chiều cao tối thiểu trừ padding */
+    }
+
+    .chat-container {
+        width: 100%; /* Chiếm toàn bộ chiều rộng */
+        max-width: none; /* Bỏ giới hạn chiều rộng tối đa */
+        height: calc(100vh - 20px); /* Chiếm toàn bộ chiều cao trừ padding body */
+        border-radius: 8px; /* Giảm bo góc */
+        border: none; /* Có thể bỏ viền */
+    }
+
+    h1 {
+        font-size: 1.1em; /* Giảm kích thước tiêu đề */
+        padding: 15px 10px;
+    }
+
+    #chatbox {
+        padding: 15px; /* Giảm padding chatbox */
+        gap: 10px; /* Giảm khoảng cách tin nhắn */
+    }
+
+    .message {
+        padding: 8px 12px; /* Giảm padding tin nhắn */
+        max-width: 90%; /* Cho phép tin nhắn rộng hơn chút */
+        font-size: 0.95em; /* Giảm nhẹ font chữ tin nhắn */
+        border-radius: 15px; /* Có thể giảm bo góc tin nhắn */
+    }
+     /* Cập nhật lại bo góc đặc biệt cho user/bot */
+     .user-message { border-bottom-right-radius: 5px; }
+     .bot-message { border-bottom-left-radius: 5px; }
+
+
+    .input-area {
+        padding: 10px 12px; /* Điều chỉnh padding */
+    }
+
+    #userInput {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+
+    #sendButton, .sample-button {
+        padding: 10px 15px;
+        font-size: 1em; /* Giữ nguyên hoặc giảm nhẹ */
+    }
+    .sample-button {
+        padding: 8px 10px; /* Điều chỉnh nút sample */
+        font-size: 1.1em;
+    }
+
+    .suggestions-area {
+        padding: 10px 12px;
+    }
+    .suggestions-area .suggestions-title {
+        font-size: 0.85em;
+        margin-bottom: 8px;
+    }
+    .suggestions-area .suggestion-buttons {
+        gap: 6px 8px; /* Giảm khoảng cách nút gợi ý */
+    }
+    .sample-message-button {
+        padding: 6px 12px;
+        font-size: 0.85em;
+    }
+}
+
+/* --- Điện thoại di động nhỏ (Ví dụ: < 480px) --- */
+@media (max-width: 479.98px) {
+    body {
+        padding: 5px; /* Giảm padding body hơn nữa */
+        min-height: calc(100vh - 10px);
+    }
+    .chat-container {
+         height: calc(100vh - 10px);
+         border-radius: 5px; /* Giảm bo góc hơn nữa */
+    }
+    h1 {
+        font-size: 1em; /* Tiêu đề nhỏ hơn */
+        padding: 12px 10px;
+    }
+    #chatbox {
+        padding: 10px; /* Padding nhỏ nhất */
+        gap: 8px;
+    }
+    .message {
+        padding: 7px 10px;
+        font-size: 0.9em;
+        border-radius: 12px;
+    }
+    /* Cập nhật lại bo góc đặc biệt */
+    .user-message { border-bottom-right-radius: 4px; }
+    .bot-message { border-bottom-left-radius: 4px; }
+
+    .input-area {
+        padding: 8px 10px;
+    }
+    #userInput {
+        padding: 9px 14px;
+        font-size: 0.9em;
+    }
+    #sendButton, .sample-button {
+        padding: 9px 14px;
+        font-size: 0.9em;
+    }
+     .sample-button {
+         padding: 7px 9px;
+         font-size: 1em;
+     }
+    .suggestions-area {
+         padding: 8px 10px;
+     }
+     .suggestions-area .suggestions-title {
+         font-size: 0.8em;
+         margin-bottom: 6px;
+     }
+     .suggestions-area .suggestion-buttons {
+         gap: 5px 6px;
+     }
+     .sample-message-button {
+         padding: 5px 10px;
+         font-size: 0.8em;
+     }
+}
